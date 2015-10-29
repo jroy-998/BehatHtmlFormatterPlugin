@@ -6,6 +6,8 @@
 
 namespace emuse\BehatHTMLFormatter\Renderer ;
 
+use emuse\BehatHTMLFormatter\Formatter\BehatHTMLFormatter;
+
 class Behat2Renderer
 {
 
@@ -295,12 +297,14 @@ class Behat2Renderer
     /**
      * Renders after a step.
      *
-     * @param object   : BehatHTMLFormatter object
+     * @param BehatHTMLFormatter $obj
      * @return string  : HTML generated
      */        
     public function renderAfterStep($obj) {
 
-        $steps = $obj->getCurrentScenario()->getSteps() ;
+        $feature = $obj->getCurrentFeature();
+        $scenario = $obj->getCurrentScenario();
+        $steps = $scenario->getSteps() ;
         $step = end($steps) ; //needed because of strict standards
 
         //path displayed only if available (it's not available in undefined steps)
@@ -331,8 +335,13 @@ class Behat2Renderer
                             <span class="path">' . $strPath . '</span>
                         </div>' ;
         if (!empty($step->getException())) {
+            $relativeScreenshotPath = 'assets/screenshots/' . $feature->getScreenshotFolder() . '/' . $scenario->getScreenshotName();
+            $absoluteScreenshotPath = $obj->getBasePath() . '/results/html/' . $relativeScreenshotPath;
             $print .= '
                         <pre class="backtrace">' . $step->getException() . '</pre>' ;
+            if(file_exists($absoluteScreenshotPath)) {
+                $print .= '<a href="' . $relativeScreenshotPath . '">Screenshot</a>';
+            }
         }
         $print .=  '
                     </li>';    

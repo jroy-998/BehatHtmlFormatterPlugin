@@ -17,6 +17,7 @@ class Feature
     private $description;
     private $tags;
     private $file;
+    private $screenshotFolder;
     private $failedScenarios = 0;
     private $passedScenarios = 0;
     private $scenarioCounter = 1;
@@ -42,6 +43,22 @@ class Feature
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScreenshotFolder()
+    {
+        return $this->screenshotFolder;
+    }
+
+    /**
+     * @param string $featureName
+     */
+    public function setScreenshotFolder($featureName)
+    {
+        $this->screenshotFolder = str_replace(' ', '', $featureName);
     }
 
     /**
